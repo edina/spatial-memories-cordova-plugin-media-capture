@@ -597,29 +597,27 @@
     // create view and display
     CGRect viewRect = [[UIScreen mainScreen] applicationFrame];
     UIView* tmp = [[UIView alloc] initWithFrame:viewRect];
-
+    
     // make backgrounds
     NSString* microphoneResource = @"CDVCapture.bundle/microphone";
-
+    
     if (CDV_IsIPhone5()) {
         microphoneResource = @"CDVCapture.bundle/microphone-568h";
     }
-
+    
     UIImage* microphone = [UIImage imageNamed:[self resolveImageResource:microphoneResource]];
     UIView* microphoneView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, viewRect.size.width, microphone.size.height)];
     [microphoneView setBackgroundColor:[UIColor colorWithPatternImage:microphone]];
     [microphoneView setUserInteractionEnabled:NO];
     [microphoneView setIsAccessibilityElement:NO];
     [tmp addSubview:microphoneView];
-
+    
     // add bottom bar view
     UIImage* grayBkg = [UIImage imageNamed:[self resolveImageResource:@"CDVCapture.bundle/controls_bg"]];
     UIView* controls = [[UIView alloc] initWithFrame:CGRectMake(0, microphone.size.height, viewRect.size.width, grayBkg.size.height)];
     [controls setBackgroundColor:[UIColor colorWithPatternImage:grayBkg]];
-    [controls setUserInteractionEnabled:NO];
-    [controls setIsAccessibilityElement:NO];
     [tmp addSubview:controls];
-
+    
     // make red recording background view
     UIImage* recordingBkg = [UIImage imageNamed:[self resolveImageResource:@"CDVCapture.bundle/recording_bg"]];
     UIColor* background = [UIColor colorWithPatternImage:recordingBkg];
@@ -628,12 +626,23 @@
     [self.recordingView setHidden:YES];
     [self.recordingView setUserInteractionEnabled:NO];
     [self.recordingView setIsAccessibilityElement:NO];
-    [tmp addSubview:self.recordingView];
+    
 
+    [self.navigationController.view addSubview:recordingView];
+    
+    // Add record button
+    self.recordImage = [UIImage imageNamed:[self resolveImageResource:@"CDVCapture.bundle/record_button"]];
+    self.stopRecordImage = [UIImage imageNamed:[self resolveImageResource:@"CDVCapture.bundle/stop_button"]];
+    self.recordButton.accessibilityTraits |= [self accessibilityTraits];
+    self.recordButton = [[UIButton alloc] initWithFrame:CGRectMake((viewRect.size.width - recordImage.size.width) / 8 , (microphone.size.height + (grayBkg.size.height - recordImage.size.height) / 2), recordImage.size.width, recordImage.size.height)];
+    [self.recordButton setAccessibilityLabel:NSLocalizedString(@"toggle audio recording", nil)];
+    [self.recordButton setImage:recordImage forState:UIControlStateNormal];
+    [self.recordButton addTarget:self action:@selector(processButton:) forControlEvents:UIControlEventTouchUpInside];
+    [tmp addSubview:recordButton];
+   
     // add label
-    self.timerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, viewRect.size.width, recordingBkg.size.height)];
-    // timerLabel.autoresizingMask = reSizeMask;
-    [self.timerLabel setBackgroundColor:[UIColor clearColor]];
+    self.timerLabel = [[UILabel alloc] initWithFrame:CGRectMake(((viewRect.size.width - recordImage.size.width) / 8) * 4 , (microphone.size.height + (grayBkg.size.height - recordImage.size.height) / 2), recordImage.size.width, recordImage.size.height)];
+    //[self.timerLabel setBackgroundColor:[UIColor whiteColor]];
     [self.timerLabel setTextColor:[UIColor whiteColor]];
 #ifdef __IPHONE_6_0
     [self.timerLabel setTextAlignment:NSTextAlignmentCenter];
@@ -646,29 +655,31 @@
     self.timerLabel.accessibilityTraits |= UIAccessibilityTraitUpdatesFrequently;
     self.timerLabel.accessibilityTraits &= ~UIAccessibilityTraitStaticText;
     [tmp addSubview:self.timerLabel];
-
-    // Add record button
-
-    self.recordImage = [UIImage imageNamed:[self resolveImageResource:@"CDVCapture.bundle/record_button"]];
-    self.stopRecordImage = [UIImage imageNamed:[self resolveImageResource:@"CDVCapture.bundle/stop_button"]];
-    self.recordButton.accessibilityTraits |= [self accessibilityTraits];
-    self.recordButton = [[UIButton alloc] initWithFrame:CGRectMake((viewRect.size.width - recordImage.size.width) / 2, (microphone.size.height + (grayBkg.size.height - recordImage.size.height) / 2), recordImage.size.width, recordImage.size.height)];
-    [self.recordButton setAccessibilityLabel:NSLocalizedString(@"toggle audio recording", nil)];
-    [self.recordButton setImage:recordImage forState:UIControlStateNormal];
-    [self.recordButton addTarget:self action:@selector(processButton:) forControlEvents:UIControlEventTouchUpInside];
-    [tmp addSubview:recordButton];
+    
 
     // make and add done button to navigation bar
-    self.doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(dismissAudioView:)];
-    [self.doneButton setStyle:UIBarButtonItemStyleDone];
-    self.navigationItem.rightBarButtonItem = self.doneButton;
-
+    UIButton *doneBut=[UIButton buttonWithType:UIButtonTypeRoundedRect] ;
+    doneBut.frame= CGRectMake(((viewRect.size.width - recordImage.size.width) / 8) * 7, (microphone.size.height + (grayBkg.size.height - recordImage.size.height) / 2), recordImage.size.width, recordImage.size.height);
+    [doneBut setTitle:@"Done" forState:UIControlStateNormal];
+    [doneBut setAccessibilityLabel:NSLocalizedString(@"Done - return to map", nil)];
+    [doneBut setBackgroundColor:[UIColor whiteColor]];
+    [doneBut setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [doneBut addTarget:self action:@selector(dismissAudioView:) forControlEvents:UIControlEventTouchUpInside];
+    [tmp addSubview:doneBut];
+    
     [self setView:tmp];
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    UIImage* grayBkg = [UIImage imageNamed:[self resolveImageResource:@"CDVCapture.bundle/controls_bg"]];
+    
+    UIView* navigationBarCover = [[UIView alloc] initWithFrame:self.navigationController.navigationBar.frame];
+    [navigationBarCover setBackgroundColor:[UIColor colorWithPatternImage:grayBkg]];
+    [self.navigationController.view addSubview:navigationBarCover];
+    
     UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, nil);
     NSError* error = nil;
 
