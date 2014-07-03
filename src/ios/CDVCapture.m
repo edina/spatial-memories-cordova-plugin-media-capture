@@ -898,6 +898,8 @@
     } else {
         self.pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_IO_EXCEPTION messageToErrorObject:CAPTURE_INTERNAL_ERR];
     }
+    // Close on record stop
+    [self dismissAudioView:nil];
 }
 
 - (void)audioRecorderEncodeErrorDidOccur:(AVAudioRecorder*)recorder error:(NSError*)error
