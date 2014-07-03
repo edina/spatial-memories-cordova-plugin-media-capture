@@ -747,9 +747,19 @@
     if (self.avRecorder.recording) {
         // stop recording
         [self.avRecorder stop];
+        
+        // Important - sound will only play after recording has stopped above
+        // See list for sound ids http://iphonedevwiki.net/index.php/AudioServices
+        AudioServicesPlayAlertSound(1054);
+        
         self.isTimed = NO;  // recording was stopped via button so reset isTimed
         // view cleanup will occur in audioRecordingDidFinishRecording
     } else {
+        
+        // Play sound to indicate start recording.  Need to sleep after as recording will stop it playing otherwise.
+        AudioServicesPlayAlertSound(1052);
+        sleep(1);
+        
         // begin recording
         [self.recordButton setImage:stopRecordImage forState:UIControlStateNormal];
         self.recordButton.accessibilityTraits &= ~[self accessibilityTraits];
