@@ -660,8 +660,8 @@
     // make and add done button to navigation bar
     UIButton *doneBut=[UIButton buttonWithType:UIButtonTypeRoundedRect] ;
     doneBut.frame= CGRectMake(((viewRect.size.width - recordImage.size.width) / 8) * 7, (microphone.size.height + (grayBkg.size.height - recordImage.size.height) / 2), recordImage.size.width, recordImage.size.height);
-    [doneBut setTitle:@"Done" forState:UIControlStateNormal];
-    [doneBut setAccessibilityLabel:NSLocalizedString(@"Done - return to map", nil)];
+    [doneBut setTitle:@"Cancel" forState:UIControlStateNormal];
+    [doneBut setAccessibilityLabel:NSLocalizedString(@"Cancel - return to map", nil)];
     [doneBut setBackgroundColor:[UIColor whiteColor]];
     [doneBut setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [doneBut addTarget:self action:@selector(dismissAudioView:) forControlEvents:UIControlEventTouchUpInside];
