@@ -621,7 +621,7 @@
     // make red recording background view
     UIImage* recordingBkg = [UIImage imageNamed:[self resolveImageResource:@"CDVCapture.bundle/recording_bg"]];
     UIColor* background = [UIColor colorWithPatternImage:recordingBkg];
-    self.recordingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, viewRect.size.width, recordingBkg.size.height)];
+    self.recordingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, viewRect.size.width, 25)];
     [self.recordingView setBackgroundColor:background];
     [self.recordingView setHidden:YES];
     [self.recordingView setUserInteractionEnabled:NO];
