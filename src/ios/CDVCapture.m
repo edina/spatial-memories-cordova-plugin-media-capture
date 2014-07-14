@@ -21,6 +21,7 @@
 #import "CDVFile.h"
 #import <Cordova/CDVJSON.h>
 #import <Cordova/CDVAvailability.h>
+#import <AudioToolbox/AudioServices.h>
 
 #define kW3CMediaFormatHeight @"height"
 #define kW3CMediaFormatWidth @"width"
@@ -68,12 +69,15 @@
 @implementation CDVCapture
 @synthesize inUse;
 
+
+
 - (id)initWithWebView:(UIWebView*)theWebView
 {
     self = (CDVCapture*)[super initWithWebView:theWebView];
     if (self) {
         self.inUse = NO;
     }
+
     return self;
 }
 
@@ -553,6 +557,14 @@
 @implementation CDVAudioRecorderViewController
 @synthesize errorCode, callbackId, duration, captureCommand, doneButton, recordingView, recordButton, recordImage, stopRecordImage, timerLabel, avRecorder, avSession, pluginResult, timer, isTimed;
 
+-(void)playSoundAlert{
+    
+    AudioServicesPlaySystemSound(soundId);
+}
+-(void) dealloc {
+    AudioServicesDisposeSystemSoundID(soundId);
+}
+
 - (NSString*)resolveImageResource:(NSString*)resource
 {
     NSString* systemVersion = [[UIDevice currentDevice] systemVersion];
@@ -581,6 +593,15 @@
         self.errorCode = CAPTURE_NO_MEDIA_FILES;
         self.isTimed = self.duration != nil;
         _previousStatusBarStyle = [UIApplication sharedApplication].statusBarStyle;
+                //setup sound effect
+        NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"voicemail" withExtension:@"aif"];
+        if (fileURL != nil)
+        {
+            SystemSoundID theSoundID;
+            OSStatus error = AudioServicesCreateSystemSoundID((__bridge CFURLRef)fileURL, &theSoundID);
+            if (error == kAudioServicesNoError)
+                soundId = theSoundID;
+        }
 
         return self;
     }
@@ -748,16 +769,13 @@
         // stop recording
         [self.avRecorder stop];
         
-        // Important - sound will only play after recording has stopped above
-        // See list for sound ids http://iphonedevwiki.net/index.php/AudioServices
-        AudioServicesPlayAlertSound(1054);
         
         self.isTimed = NO;  // recording was stopped via button so reset isTimed
         // view cleanup will occur in audioRecordingDidFinishRecording
     } else {
         
         // Play sound to indicate start recording.  Need to sleep after as recording will stop it playing otherwise.
-        AudioServicesPlayAlertSound(1052);
+        [self playSoundAlert];
         sleep(1);
         
         // begin recording
@@ -925,5 +943,7 @@
 
     [super viewWillAppear:animated];
 }
+
+
 
 @end

@@ -131,6 +131,7 @@ xmlns:rim="http://www.blackberry.com/ns/widgets"
         <header-file src="src/ios/CDVCapture.h" />
         <source-file src="src/ios/CDVCapture.m" />
         <resource-file src="src/ios/CDVCapture.bundle" />
+        <resource-file src="src/ios/voicemail.aif" />
         
         <framework src="CoreGraphics.framework" />
         <framework src="MobileCoreServices.framework" />

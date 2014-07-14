@@ -21,6 +21,7 @@
 #import <MobileCoreServices/MobileCoreServices.h>
 #import <AVFoundation/AVFoundation.h>
 #import <Cordova/CDVPlugin.h>
+#import <AudioToolbox/AudioServices.h>
 #import "CDVFile.h"
 
 enum CDVCaptureError {
@@ -48,8 +49,11 @@ typedef NSUInteger CDVCaptureError;
 {
     CDVImagePicker* pickerController;
     BOOL inUse;
+    
+    
 }
 @property BOOL inUse;
+
 - (void)captureAudio:(CDVInvokedUrlCommand*)command;
 - (void)captureImage:(CDVInvokedUrlCommand*)command;
 - (CDVPluginResult*)processImage:(UIImage*)image type:(NSString*)mimeType forCallbackId:(NSString*)callbackId;
@@ -92,7 +96,9 @@ typedef NSUInteger CDVCaptureError;
     CDVPluginResult* pluginResult;
     NSTimer* timer;
     BOOL isTimed;
+    SystemSoundID soundId;
 }
+
 @property (nonatomic) CDVCaptureError errorCode;
 @property (nonatomic, copy) NSString* callbackId;
 @property (nonatomic, copy) NSNumber* duration;
@@ -108,7 +114,7 @@ typedef NSUInteger CDVCaptureError;
 @property (nonatomic, strong) CDVPluginResult* pluginResult;
 @property (nonatomic, strong) NSTimer* timer;
 @property (nonatomic) BOOL isTimed;
-
+- (void)playSoundAlert;
 - (id)initWithCommand:(CDVPlugin*)theCommand duration:(NSNumber*)theDuration callbackId:(NSString*)theCallbackId;
 - (void)processButton:(id)sender;
 - (void)stopRecordingCleanup;
