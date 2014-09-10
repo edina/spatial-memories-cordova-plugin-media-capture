@@ -69,14 +69,35 @@ xmlns:rim="http://www.blackberry.com/ns/widgets"
             </feature>
         </config-file>
         
-        <config-file target="AndroidManifest.xml" parent="/*">
-            <uses-permission android:name="android.permission.RECORD_AUDIO" />
-            <uses-permission android:name="android.permission.RECORD_VIDEO"/>
-            <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-        </config-file>
 
+    <config-file target="AndroidManifest.xml" parent="/manifest/application">
+      <uses-permission android:name="android.permission.RECORD_AUDIO" />
+      <uses-permission android:name="android.permission.RECORD_VIDEO"/>
+      <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+         <activity android:name="AudioRecorderActivity" android:label="Record Audio" android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen">
+        </activity>
+    </config-file>
+
+        
         <source-file src="src/android/Capture.java" target-dir="src/org/apache/cordova/mediacapture" />
+        <source-file src="src/android/res/drawable/audiorecord_normal.png" target-dir="res/drawable" />
+        <source-file src="src/android/res/drawable/audiorecord_pressed.png" target-dir="res/drawable" />
+        <source-file src="src/android/res/drawable/audiorecord.xml" target-dir="res/drawable" />
+        <source-file src="src/android/res/drawable/controls_bg.png" target-dir="res/drawable" />
+        <source-file src="src/android/res/drawable/ic_action_pause.png" target-dir="res/drawable" />
+        <source-file src="src/android/res/drawable/ic_action_play.png" target-dir="res/drawable" />
+        <source-file src="src/android/res/drawable/ic_action_replay.png" target-dir="res/drawable" />
+        <source-file src="src/android/res/drawable/microphone.png" target-dir="res/drawable" />
+        <source-file src="src/android/res/drawable/pausebutton.xml" target-dir="res/drawable" />
+        <source-file src="src/android/res/drawable/playbutton.xml" target-dir="res/drawable" />
+        <source-file src="src/android/res/drawable/recording_bg.png" target-dir="res/drawable" />
+        <source-file src="src/android/res/drawable/replaybutton.xml" target-dir="res/drawable" />
+        <source-file src="src/android/res/drawable/stop_button.png" target-dir="res/drawable" />
+        <source-file src="src/android/res/drawable/stopbutton.xml" target-dir="res/drawable" />
+        <source-file src="src/android/res/layout/audio.xml" target-dir="res/layout" />
         <source-file src="src/android/FileHelper.java" target-dir="src/org/apache/cordova/mediacapture" />
+        <source-file src="src/android/AudioRecorderActivity.java" target-dir="src/org/apache/cordova/mediacapture" />
     </platform>
     
     <!-- amazon-fireos -->
