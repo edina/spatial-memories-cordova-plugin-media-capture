@@ -12,14 +12,16 @@
      android:gravity="center"
      android:text="0:00"
      android:scaleType="fitXY"
+    android:layout_weight="0" 
      android:background="@drawable/controls_bg"/>
 
 
 
 
     <ImageView android:id="@+id/image_microphone" 
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_weight="1" 
     android:src="@drawable/microphone"/>
 
 
@@ -29,6 +31,7 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:gravity="center"
+    android:layout_weight="0" 
     android:background="@drawable/controls_bg">
 
      <Button
@@ -37,7 +40,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center_horizontal"
+        android:layout_weight="0" 
         android:background="@drawable/audiorecord"/>
+
+      <Space android:layout_width="10dp" android:layout_height="wrap_content"/>
 
      <Button
         android:id="@+id/play_btn"
@@ -45,14 +51,18 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center_horizontal"
+        android:layout_weight="0" 
         android:background="@drawable/playbutton"/>
     
+      <Space android:layout_width="10dp" android:layout_height="wrap_content"/>
+
      <Button
         android:id="@+id/done_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center_horizontal"
+        android:layout_weight="0" 
         android:text="Done"/>
    
    </LinearLayout>
