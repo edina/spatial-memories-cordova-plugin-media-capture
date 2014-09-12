@@ -50,6 +50,9 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import java.util.List ;
+import android.content.pm.PackageManager ;
+import android.content.pm.ResolveInfo ;
 
 public class Capture extends CordovaPlugin {
 
@@ -73,6 +76,8 @@ public class Capture extends CordovaPlugin {
     private int duration;                           // optional max duration of video recording in seconds
     private JSONArray results;                      // The array of results to be returned to the user
     private int numPics;                            // Number of pictures before capture activity
+    private final String LOGTAG = "CaptureActivity" ;
+
 
     //private CordovaInterface cordova;
 
@@ -200,9 +205,13 @@ public class Capture extends CordovaPlugin {
      * Sets up an intent to capture audio.  Result handled by onActivityResult()
      */
     private void captureAudio() {
-        Intent intent = new Intent(this.cordova.getActivity(), uk.ac.edina.mobile.AudioRecorderActivity.class);
-
-        this.cordova.startActivityForResult((CordovaPlugin) this, intent, CAPTURE_AUDIO);
+        // Intent intent = new Intent(this.cordova.getActivity(), uk.ac.edina.mobile.AudioRecorderActivity.class);
+        PackageManager packageManager = cordova.getActivity().getPackageManager() ;
+        Intent intent = new Intent(android.provider.MediaStore.Audio.Media.RECORD_SOUND_ACTION) ;
+        List<ResolveInfo> activities = packageManager.queryIntentActivities(intent, 0 ) ;
+        Log.d(LOGTAG, "number of resolved activities: " + activities.size() ) ;
+        Intent chooser = Intent.createChooser(intent, "Record Audio With") ; 
+        this.cordova.startActivityForResult((CordovaPlugin) this, chooser, CAPTURE_AUDIO);
     }
 
     private String getTempDirectoryPath() {
