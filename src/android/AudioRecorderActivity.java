@@ -1,4 +1,4 @@
-package uk.ac.edina.mobile ;
+package  org.apache.cordova.mediacapture ;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -63,7 +63,8 @@ public class AudioRecorderActivity extends Activity
 
                }) ;
             mPlayer.prepare();
-        } catch (IOException e) {
+
+      } catch (IOException e) {
             Log.e(LOG_TAG, "prepare() failed");
         }
     }
