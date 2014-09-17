@@ -44,6 +44,7 @@ function _capture(type, successCallback, errorCallback, options) {
             mediaFile.type = pluginResult[i].type;
             mediaFile.lastModifiedDate = pluginResult[i].lastModifiedDate;
             mediaFile.size = pluginResult[i].size;
+            mediaFile.duration = pluginResult[i].duration ;
             mediaFiles.push(mediaFile);
         }
         successCallback(mediaFiles);
