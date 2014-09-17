@@ -190,7 +190,7 @@ public class Capture extends CordovaPlugin {
         try {
             player.setDataSource(filePath);
             player.prepare();
-            obj.put("duration", player.getDuration() / 1000);
+            obj.put("duration", player.getDuration() );
             Log.d(LOG_TAG, "audio duration: " + player.getDuration()) ;
             if (video) {
                 obj.put("height", player.getVideoHeight());
@@ -291,7 +291,7 @@ public class Capture extends CordovaPlugin {
                         Uri data = intent.getData();
                         // create a file object from the uri
                         results.put(createMediaFile(data));
-
+                        Log.d(LOGTAG, "results: " + results ) ;                      
                         if (results.length() >= limit) {
                             // Send Uri back to JavaScript for listening to audio
                             that.callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, results));
@@ -475,9 +475,16 @@ public class Capture extends CordovaPlugin {
 
                 } else {
                     obj.put("type", VIDEO_3GPP);
+                    getAudioVideoData(fp.toURI().toString() , obj, true) ;
                 }
             } else {
                 obj.put("type", FileHelper.getMimeType(Uri.fromFile(fp), cordova));
+                if(FileHelper.getMimeType(Uri.fromFile(fp), cordova).contains("audio")){
+                    getAudioVideoData(fp.toURI().toString() , obj, false) ;
+                }else {
+                    getAudioVideoData(fp.toURI().toString() , obj, true) ;
+               }
+           
             }
 
             obj.put("lastModifiedDate", fp.lastModified());
