@@ -469,7 +469,7 @@ public class Capture extends CordovaPlugin {
             // are reported as video/3gpp. I'm doing this hacky check of the URI to see if it
             // is stored in the audio or video content store.
             if (fp.getAbsoluteFile().toString().endsWith(".3gp") || fp.getAbsoluteFile().toString().endsWith(".3gpp")) {
-                if (data.toString().contains("/audio/")) {
+                if (data.toString().contains("/audio/") || data.toString().contains("audio")) {
                     obj.put("type", AUDIO_3GPP);
                 } else {
                     obj.put("type", VIDEO_3GPP);

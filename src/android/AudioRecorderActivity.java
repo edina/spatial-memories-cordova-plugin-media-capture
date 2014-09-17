@@ -99,7 +99,8 @@ public class AudioRecorderActivity extends Activity
 
     public AudioRecorderActivity() {
         mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
-        mFileName += "/audiorecordtest2.3gp";
+        Log.d(LOG_TAG, "filename path: " + mFileName)  ;
+        mFileName += "/audio.3gp";
     }
 
     
@@ -123,7 +124,6 @@ public class AudioRecorderActivity extends Activity
                  Intent result = new Intent("CAPTURE_AUDIO", Uri.parse("file://" + mFileName)) ;
                  activity.setResult(Activity.RESULT_OK, result) ;
                  activity.finish() ;
-                 // Intent result = new Intent("uk.ac.edina.RESULT"
              }
         });
 
