@@ -18,6 +18,7 @@ import java.io.IOException ;
 import android.content.Intent ;
 import uk.ac.edina.mobile.R ;
 import android.net.Uri ;
+import java.io.File ;
 
 public class AudioRecorderActivity extends Activity
 {
@@ -101,6 +102,17 @@ public class AudioRecorderActivity extends Activity
         mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
         Log.d(LOG_TAG, "filename path: " + mFileName)  ;
         mFileName += "/audio.3gp";
+        File fl = new File(mFileName) ;
+        if(fl.exists() &&  fl.delete())
+        { 
+		Log.d(LOG_TAG, "deleted existing audio file") ;
+        }
+        else
+        {
+		Log.e(LOG_TAG, "could not delete existing file" ) ;
+        }
+
+
     }
 
     
@@ -121,8 +133,15 @@ public class AudioRecorderActivity extends Activity
      
              public void onClick(View v) {
                  Log.d(LOG_TAG, "filename:" + mFileName ) ;
-                 Intent result = new Intent("CAPTURE_AUDIO", Uri.parse("file://" + mFileName)) ;
-                 activity.setResult(Activity.RESULT_OK, result) ;
+                 if(new File(mFileName).exists())
+                 {
+                    Intent result = new Intent("CAPTURE_AUDIO", Uri.parse("file://" + mFileName)) ;
+                    activity.setResult(Activity.RESULT_OK, result) ;
+                 }
+                 else
+                 {
+                    activity.setResult(Activity.RESULT_CANCELED) ; 
+                 } 
                  activity.finish() ;
              }
         });
