@@ -471,6 +471,8 @@ public class Capture extends CordovaPlugin {
             if (fp.getAbsoluteFile().toString().endsWith(".3gp") || fp.getAbsoluteFile().toString().endsWith(".3gpp")) {
                 if (data.toString().contains("/audio/") || data.toString().contains("audio")) {
                     obj.put("type", AUDIO_3GPP);
+                    getAudioVideoData(fp.toURI().toString() , obj, false) ;
+
                 } else {
                     obj.put("type", VIDEO_3GPP);
                 }
@@ -480,6 +482,8 @@ public class Capture extends CordovaPlugin {
 
             obj.put("lastModifiedDate", fp.lastModified());
             obj.put("size", fp.length());
+            Log.d(LOGTAG, "obj:" + obj ) ;
+
         } catch (JSONException e) {
             // this will never happen
             e.printStackTrace();
