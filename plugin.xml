@@ -75,7 +75,7 @@ xmlns:rim="http://www.blackberry.com/ns/widgets"
       <uses-permission android:name="android.permission.RECORD_VIDEO"/>
       <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-         <activity android:name="AudioRecorderActivity" android:label="Record Audio" android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen">
+         <activity android:name="org.apache.cordova.mediacapture.AudioRecorderActivity" android:label="Record Audio" android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen">
              <intent-filter>
                <action android:name="android.provider.MediaStore.RECORD_SOUND"/>
                <category android:name="android.intent.category.DEFAULT"/>

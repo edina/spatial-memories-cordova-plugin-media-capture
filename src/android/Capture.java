@@ -191,6 +191,7 @@ public class Capture extends CordovaPlugin {
             player.setDataSource(filePath);
             player.prepare();
             obj.put("duration", player.getDuration() / 1000);
+            Log.d(LOG_TAG, "audio duration: " + player.getDuration()) ;
             if (video) {
                 obj.put("height", player.getVideoHeight());
                 obj.put("width", player.getVideoWidth());
