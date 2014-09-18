@@ -101,15 +101,19 @@ public class AudioRecorderActivity extends Activity
     public AudioRecorderActivity() {
         mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
         Log.d(LOG_TAG, "filename path: " + mFileName)  ;
-        mFileName += "/audio.3gp";
+        int fileIndex = 1 ;
+        File dir = new File(mFileName) ;
+        File[] files = dir.listFiles() ;
+        if (files != null) { fileIndex = files.length + 1 ; } 
+        
+        
+        
+        mFileName += "/audio" + fileIndex + ".3gp"; // filename should be unique in directory
         File fl = new File(mFileName) ;
-        if(fl.exists() &&  fl.delete())
-        { 
-		Log.d(LOG_TAG, "deleted existing audio file") ;
-        }
-        else
+        if(new File(mFileName).exists())         
         {
-		Log.e(LOG_TAG, "could not delete existing file" ) ;
+		Log.e(LOG_TAG, "filename not unique:" + mFileName ) ;
+                
         }
 
 
