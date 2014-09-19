@@ -155,12 +155,6 @@ xmlns:rim="http://www.blackberry.com/ns/widgets"
             </feature>
         </config-file>
 
-        <!--this need to be added to the .plist file-->
-       <config-file target="*-Info.plist" parent="UIBackgroundModes">
-            <array>
-                <string>location</string>
-            </array>
-        </config-file>
         <header-file src="src/ios/CDVCapture.h" />
         <source-file src="src/ios/CDVCapture.m" />
         <resource-file src="src/ios/CDVCapture.bundle" />
