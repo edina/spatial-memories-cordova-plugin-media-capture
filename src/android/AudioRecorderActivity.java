@@ -78,9 +78,9 @@ public class AudioRecorderActivity extends Activity
     private void startRecording() {
         mRecorder = new MediaRecorder();
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
         mRecorder.setOutputFile(mFileName);
-        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
 
         try {
             mRecorder.prepare();
@@ -108,7 +108,7 @@ public class AudioRecorderActivity extends Activity
         
         
         
-        mFileName += "/audio" + fileIndex + ".3gp"; // filename should be unique in directory
+        mFileName += "/audio" + fileIndex + ".m4a"; // filename should be unique in directory
         File fl = new File(mFileName) ;
         if(new File(mFileName).exists())         
         {
