@@ -873,11 +873,19 @@
     [self.captureCommand setInUse:NO];
     UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, nil);
     // return result
+    
     [self.captureCommand.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
-
+    
+    
     if (IsAtLeastiOSVersion(@"7.0")) {
         [[UIApplication sharedApplication] setStatusBarStyle:_previousStatusBarStyle];
     }
+}
+
+-(void) addDurationInMstoResult:(NSMutableDictionary *) resultDict {
+    //need ms
+    [resultDict setObject:self.durationInMs forKey:@"duration"];
+    
 }
 
 - (void)updateTime
@@ -891,6 +899,8 @@
     // is this format universal?
     int secs = interval % 60;
     int min = interval / 60;
+    
+    self.durationInMs =[NSNumber numberWithInt:interval * 1000];
 
     if (interval < 60) {
         return [NSString stringWithFormat:@"0:%02d", interval];
@@ -901,6 +911,7 @@
 
 - (void)audioRecorderDidFinishRecording:(AVAudioRecorder*)recorder successfully:(BOOL)flag
 {
+    
     // may be called when timed audio finishes - need to stop time and reset buttons
     [self.timer invalidate];
     [self stopRecordingCleanup];
@@ -909,7 +920,8 @@
     if (flag) {
         NSString* filePath = [avRecorder.url path];
         // NSLog(@"filePath: %@", filePath);
-        NSDictionary* fileDict = [captureCommand getMediaDictionaryFromPath:filePath ofType:@"audio/wav"];
+        NSMutableDictionary* fileDict = [[captureCommand getMediaDictionaryFromPath:filePath ofType:@"audio/wav"] mutableCopy];
+        [self addDurationInMstoResult:fileDict];
         NSArray* fileArray = [NSArray arrayWithObject:fileDict];
 
         self.pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray:fileArray];
