@@ -891,7 +891,9 @@
 - (void)updateTime
 {
     // update the label with the elapsed time
-    [self.timerLabel setText:[self formatTime:self.avRecorder.currentTime]];
+    int currentTime = (int)self.avRecorder.currentTime;
+    [self.timerLabel setText:[self formatTime:currentTime]];
+    self.durationInMs =[NSNumber numberWithInt:currentTime * 1000];
 }
 
 - (NSString*)formatTime:(int)interval
@@ -900,7 +902,6 @@
     int secs = interval % 60;
     int min = interval / 60;
     
-    self.durationInMs =[NSNumber numberWithInt:interval * 1000];
 
     if (interval < 60) {
         return [NSString stringWithFormat:@"0:%02d", interval];
