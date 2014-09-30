@@ -114,6 +114,7 @@ typedef NSUInteger CDVCaptureError;
 @property (nonatomic, strong) CDVPluginResult* pluginResult;
 @property (nonatomic, strong) NSTimer* timer;
 @property (nonatomic, strong) NSNumber* durationInMs;
+
 @property (nonatomic) BOOL isTimed;
 - (void) addDurationInMstoResult:(NSMutableDictionary *) resultDict;
 - (void)playSoundAlert;
@@ -123,4 +124,5 @@ typedef NSUInteger CDVCaptureError;
 - (void)dismissAudioView:(id)sender;
 - (NSString*)formatTime:(int)interval;
 - (void)updateTime;
+- (NSString *)getUUID;
 @end

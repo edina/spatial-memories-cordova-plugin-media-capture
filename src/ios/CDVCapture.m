@@ -719,14 +719,12 @@
 
     NSString* docsPath = [NSTemporaryDirectory()stringByStandardizingPath];   // use file system temporary directory
     NSError* err = nil;
-    NSFileManager* fileMgr = [[NSFileManager alloc] init];
 
     // generate unique file name
     NSString* filePath;
-    int i = 1;
-    do {
-        filePath = [NSString stringWithFormat:@"%@/audio_%03d.wav", docsPath, i++];
-    } while ([fileMgr fileExistsAtPath:filePath]);
+
+    filePath = [NSString stringWithFormat:@"%@/audio_%@.wav", docsPath, [self getUUID]];
+    
 
     NSURL* fileURL = [NSURL fileURLWithPath:filePath isDirectory:NO];
 
@@ -744,6 +742,16 @@
         self.recordButton.enabled = YES;
         self.doneButton.enabled = YES;
     }
+}
+
+
+-(NSString *)getUUID
+{
+    CFUUIDRef newUniqueId = CFUUIDCreate(kCFAllocatorDefault);
+    NSString * uuidString = (__bridge_transfer NSString*)CFUUIDCreateString(kCFAllocatorDefault, newUniqueId);
+    CFRelease(newUniqueId);
+
+    return uuidString;
 }
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 60000
@@ -888,8 +896,8 @@
     
 }
 
-- (void)updateTime
-{
+- (void)updateTime{
+
     // update the label with the elapsed time
     int currentTime = (int)self.avRecorder.currentTime;
     [self.timerLabel setText:[self formatTime:currentTime]];
@@ -901,6 +909,7 @@
     // is this format universal?
     int secs = interval % 60;
     int min = interval / 60;
+    
     
 
     if (interval < 60) {
