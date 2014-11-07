@@ -719,14 +719,12 @@
 
     NSString* docsPath = [NSTemporaryDirectory()stringByStandardizingPath];   // use file system temporary directory
     NSError* err = nil;
-    NSFileManager* fileMgr = [[NSFileManager alloc] init];
 
     // generate unique file name
     NSString* filePath;
-    int i = 1;
-    do {
-        filePath = [NSString stringWithFormat:@"%@/audio_%03d.wav", docsPath, i++];
-    } while ([fileMgr fileExistsAtPath:filePath]);
+
+    filePath = [NSString stringWithFormat:@"%@/audio_%@.wav", docsPath, [self getUUID]];
+    
 
     NSURL* fileURL = [NSURL fileURLWithPath:filePath isDirectory:NO];
 
@@ -744,6 +742,16 @@
         self.recordButton.enabled = YES;
         self.doneButton.enabled = YES;
     }
+}
+
+
+-(NSString *)getUUID
+{
+    CFUUIDRef newUniqueId = CFUUIDCreate(kCFAllocatorDefault);
+    NSString * uuidString = (__bridge_transfer NSString*)CFUUIDCreateString(kCFAllocatorDefault, newUniqueId);
+    CFRelease(newUniqueId);
+
+    return uuidString;
 }
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 60000
@@ -873,17 +881,27 @@
     [self.captureCommand setInUse:NO];
     UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, nil);
     // return result
+    
     [self.captureCommand.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
-
+    
+    
     if (IsAtLeastiOSVersion(@"7.0")) {
         [[UIApplication sharedApplication] setStatusBarStyle:_previousStatusBarStyle];
     }
 }
 
-- (void)updateTime
-{
+-(void) addDurationInMstoResult:(NSMutableDictionary *) resultDict {
+    //need ms
+    [resultDict setObject:self.durationInMs forKey:@"duration"];
+    
+}
+
+- (void)updateTime{
+
     // update the label with the elapsed time
-    [self.timerLabel setText:[self formatTime:self.avRecorder.currentTime]];
+    int currentTime = (int)self.avRecorder.currentTime;
+    [self.timerLabel setText:[self formatTime:currentTime]];
+    self.durationInMs =[NSNumber numberWithInt:currentTime * 1000];
 }
 
 - (NSString*)formatTime:(int)interval
@@ -891,6 +909,8 @@
     // is this format universal?
     int secs = interval % 60;
     int min = interval / 60;
+    
+    
 
     if (interval < 60) {
         return [NSString stringWithFormat:@"0:%02d", interval];
@@ -901,6 +921,7 @@
 
 - (void)audioRecorderDidFinishRecording:(AVAudioRecorder*)recorder successfully:(BOOL)flag
 {
+    
     // may be called when timed audio finishes - need to stop time and reset buttons
     [self.timer invalidate];
     [self stopRecordingCleanup];
@@ -909,7 +930,8 @@
     if (flag) {
         NSString* filePath = [avRecorder.url path];
         // NSLog(@"filePath: %@", filePath);
-        NSDictionary* fileDict = [captureCommand getMediaDictionaryFromPath:filePath ofType:@"audio/wav"];
+        NSMutableDictionary* fileDict = [[captureCommand getMediaDictionaryFromPath:filePath ofType:@"audio/wav"] mutableCopy];
+        [self addDurationInMstoResult:fileDict];
         NSArray* fileArray = [NSArray arrayWithObject:fileDict];
 
         self.pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray:fileArray];
