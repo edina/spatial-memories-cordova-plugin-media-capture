@@ -16,9 +16,11 @@ import android.media.MediaRecorder ;
 import android.media.MediaPlayer ;
 import java.io.IOException ;
 import android.content.Intent ;
-import uk.ac.edina.mobile.R ;
+// import uk.ac.edina.mobile.R ;
 import android.net.Uri ;
 import java.io.File ;
+
+import android.content.res.Resources ;
 
 public class AudioRecorderActivity extends Activity
 {
@@ -49,6 +51,8 @@ public class AudioRecorderActivity extends Activity
 
     private void preparePlaying() {
         mPlayer = new MediaPlayer();
+       final String package_name = getApplication().getPackageName();
+       final Resources resources = getApplication().getResources();
         try {
             mPlayer.setDataSource(mFileName);
             mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -57,7 +61,7 @@ public class AudioRecorderActivity extends Activity
                              mStatusView.setText("Completed playing") ;
  			     mPlaying = false ;
                              mPaused = false ;
-                             mPlayButton.setBackgroundResource(R.drawable.replaybutton);
+                             mPlayButton.setBackgroundResource(resources.getIdentifier("replaybutton", "drawable", package_name) );
                              mRecordButton.setVisibility(View.VISIBLE) ;
 
                           }
@@ -125,12 +129,17 @@ public class AudioRecorderActivity extends Activity
         super.onCreate(icicle);
 
         Intent intent = getIntent() ;
+       
+       final String package_name = getApplication().getPackageName();
+       final Resources resources = getApplication().getResources();
+       setContentView(resources.getIdentifier("audio", "layout", package_name));
+
+        // setContentView(R.layout.audio);
         
-        setContentView(R.layout.audio);
         preparePlaying() ;
-        mStatusView = (TextView) findViewById(R.id.recording_txt) ;
-        mRecordButton = (Button) findViewById(R.id.recordaudio_btn);
-        Button doneButton = (Button) findViewById(R.id.done_btn) ;
+        mStatusView = (TextView) findViewById(resources.getIdentifier("recording_txt", "id", package_name)) ;
+        mRecordButton = (Button) findViewById(resources.getIdentifier("recordaudio_btn", "id", package_name ));
+        Button doneButton = (Button) findViewById(resources.getIdentifier("done_btn", "id", package_name )) ;
         final AudioRecorderActivity activity = this ;
 
         doneButton.setOnClickListener(new View.OnClickListener() {
@@ -157,10 +166,10 @@ public class AudioRecorderActivity extends Activity
                  {
                     mRecording = false ;
                     onRecord(false) ;
-                    mRecordButton.setBackgroundResource(R.drawable.audiorecord);
+                    mRecordButton.setBackgroundResource(resources.getIdentifier("audiorecord","drawable",package_name));
                     mPlayButton.setVisibility(View.VISIBLE) ;
-                     mStatusView.setBackgroundResource(R.drawable.controls_bg) ;
-                    mPlayButton.setBackgroundResource(R.drawable.playbutton) ;
+                     mStatusView.setBackgroundResource(resources.getIdentifier("controls_bg", "drawable", package_name)) ;
+                    mPlayButton.setBackgroundResource(resources.getIdentifier("playbutton", "drawable", package_name)) ;
                     mStatusView.setText("Stopped Recording") ;
                  }
                  else
@@ -168,16 +177,16 @@ public class AudioRecorderActivity extends Activity
                      mRecording = true ;
                      mPaused = false ;
                      onRecord(true) ;
-                     mRecordButton.setBackgroundResource(R.drawable.stopbutton);
+                     mRecordButton.setBackgroundResource(resources.getIdentifier("stopbutton", "drawable", package_name));
                      mPlayButton.setVisibility(View.INVISIBLE) ;
-                     mStatusView.setBackgroundResource(R.drawable.recording_bg) ;
+                     mStatusView.setBackgroundResource(resources.getIdentifier("recording_bg", "drawable", package_name)) ;
                      mStatusView.setText("Recording") ;
                      // TODO start a timer to cut off recording after 5 minutes
                  }
              }
          });
 
-         mPlayButton = (Button) findViewById(R.id.play_btn);
+         mPlayButton = (Button) findViewById(resources.getIdentifier("play_btn", "id", package_name));
          mPlayButton.setOnClickListener(new View.OnClickListener() {
              public void onClick(View v) {
                   if(mPlaying)
@@ -185,7 +194,7 @@ public class AudioRecorderActivity extends Activity
                      mPlaying = false ;
                      mPaused = true ;
                      mPlayer.pause() ;
-                     mPlayButton.setBackgroundResource(R.drawable.playbutton);
+                     mPlayButton.setBackgroundResource(resources.getIdentifier("playbutton", "drawable", package_name));
                      mStatusView.setText("Paused") ;
                      mRecordButton.setVisibility(View.VISIBLE) ;
                   } 
@@ -197,7 +206,7 @@ public class AudioRecorderActivity extends Activity
                         preparePlaying() ;
                      }
                      mPlayer.start() ;
-                     mPlayButton.setBackgroundResource(R.drawable.pausebutton);
+                     mPlayButton.setBackgroundResource(resources.getIdentifier("pausebutton", "drawable",package_name));
                      mStatusView.setText("Playing") ;
                      mRecordButton.setVisibility(View.INVISIBLE) ;
 
